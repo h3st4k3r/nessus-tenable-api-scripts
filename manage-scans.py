@@ -74,14 +74,11 @@ def delete_scan(scan_id):
 
 # Function to list scan policies
 def list_policies():
-    url = f"{BASE_URL}/policies"
-    response = requests.get(url, headers=HEADERS, verify=False)
-    if response.status_code == 200:
-        policies = response.json()
-        for policy in policies['policies']:
-            print(f"Policy Name: {policy['name']}, UUID: {policy['uuid']}, Policy ID: {policy['id']}")
+    policies = nessus_api_call("/policies")
+    if policies:
+        print(json.dumps(policies, indent=2))
     else:
-        print(f"Error listing policies: {response.status_code}")
+        print("Error al listar las políticas.")
 
 # Main function
 def main():
