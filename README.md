@@ -1,4 +1,3 @@
-
 # Nessus API Automation with Python
 
 This project enables interaction with the Nessus API using Python, automating tasks such as creating, launching, retrieving results, and deleting scans. It's useful for automating security workflows and managing scans via scripts without needing access to the Nessus web interface.
@@ -25,10 +24,11 @@ pip install requests
 This script supports the following functionalities:
 
 - **List active scans**.
-- **Create a new scan**.
+- **Create a new scan with a specific policy**.
 - **Launch a scan**.
 - **Get the results of a scan**.
 - **Delete a scan**.
+- **List available scan policies**.
 
 ### How to Use
 
@@ -38,10 +38,7 @@ This script supports the following functionalities:
 2. **Configure the API keys**:
    Edit the `manage-scans.py` file and replace the `ACCESS_KEY` and `SECRET_KEY` values with your Nessus API keys.
 
-3. **Configure your domain or IP**:
-   Edit the `manage-scans.py` file and replace the `BASE_URL` value with your Nessus domain or IP.
-
-4. **Run the script**:
+3. **Run the script**:
    Use the following commands to interact with the Nessus API. Below are the available commands:
 
 ## Available Commands
@@ -54,17 +51,19 @@ This command lists all current scans on the Nessus server.
 python3 manage-scans.py list_scans
 ```
 
-### 2. Create a New Scan
+### 2. Create a New Scan with a Specific Policy
 
-This command creates a new scan using a name and the specified targets (IPs or ranges). The script uses a default policy (modify the `policy_id` and `uuid` according to your configuration).
+This command creates a new scan using a name, the specified targets (IPs or ranges), and a specific scan policy. You can list the available policies using the `list_policies` command.
 
 ```bash
-python3 manage-scans.py create_scan 'New Scan' '192.168.1.10,192.168.1.20'
+python3 manage-scans.py create_scan "Scan Name" "192.168.1.10,192.168.1.20" "UUID_POLICY" POLICY_ID
 ```
 
 **Parameters**:
 - **name**: Name of the scan.
 - **targets**: List of IPs or IP ranges separated by commas.
+- **uuid**: The UUID of the policy you want to use (retrieved using `list_policies`).
+- **policy_id**: The ID of the policy you want to use (retrieved using `list_policies`).
 
 ### 3. Launch a Scan
 
@@ -99,16 +98,12 @@ python3 manage-scans.py delete_scan <scan_id>
 **Parameters**:
 - **scan_id**: The ID of the scan you want to delete.
 
-## Script Structure
+### 6. List Available Scan Policies
 
-The `manage-scans.py` script is divided into several functions, which are triggered based on the argument passed when the script is run.
+This command lists all available scan policies on the Nessus server, showing the policy name, UUID, and policy ID.
 
-### Key Functions:
+```bash
+python3 manage-scans.py list_policies
+```
 
-- **`list_scans()`**: Retrieves the list of scans.
-- **`create_scan(name, targets)`**: Creates a new scan using the specified name and targets.
-- **`launch_scan(scan_id)`**: Launches the scan with the provided ID.
-- **`get_scan_results(scan_id)`**: Retrieves the results of the scan.
-- **`delete_scan(scan_id)`**: Deletes the scan with the provided ID.
-
-Each function interacts with the Nessus API using HTTP requests and processes the results in JSON format. The script also uses the `sys` library to handle command-line arguments and facilitate the execution of different functions.
+This will display all available policies, allowing you to choose the appropriate `uuid` and `policy_id` when creating a new scan.
